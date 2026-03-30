@@ -28,6 +28,7 @@ export default function Bilderplan(props) {
 
 	useEffect(() => {
 		queryPHP("formationBilder", {team:glob.team}, data => {
+			if(glob.plan.id == data.id) return
 			let loaded = new Date().toLocaleTimeString()
 			let plan = {...data, loaded}
 			let maxId = plan.bilder.reduce((c,i) => Math.max(c, i.id), 0)
@@ -50,7 +51,7 @@ export default function Bilderplan(props) {
 		postPHP("uploadFormationBilder",{json, pairs:copy.pairs, team:glob.team}, res=>{
 			copy.id=res
 			copy.changed=false
-			copy.saved = new Date().toLocaleString()
+			copy.saved = new Date().toString()
 			dispatch(storePlanOriginal({team:glob.team, plan: copy}))
 			dispatch(storePlan({team:glob.team, plan: copy}))
 			dispatch(setUploading(false))

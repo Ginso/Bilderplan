@@ -142,8 +142,8 @@ export default function TabBild(props) {
 	return (<div id="tabBild" style={{padding:'0px 20px'}}>
 			<BildHeader/> {/* Zeile mit Title, Navigation zu anderen Bildern, editMode, etc.*/}
 			<div style={{textAlign:'center'}}>
-				{glob.editMode && <div><button style={{color:'red'}} onClick={deleteBild}>Bild löschen</button></div>}
-				{glob.editMode && <div><button disabled={!changed} onClick={() => updateBild(originalBild)}>Änderungen in diesem Bild verwerfen</button></div>}
+				{glob.editMode ? <div><button style={{color:'red'}} onClick={deleteBild}>Bild löschen</button></div> : null}
+				{glob.editMode ? <div><button disabled={!changed} onClick={() => updateBild(originalBild)}>Änderungen in diesem Bild verwerfen</button></div> : null}
 				<div id="gridWrapper" className={glob.rotated ? "rotated" : ""} style={{display:'inline-block', marginTop:'50px', position:'relative'}}>
 					<Grid/>
 					<div id="posTop" style={{top:'-20px'}}>

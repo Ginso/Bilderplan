@@ -22,15 +22,13 @@
 
 	
 	// Daten-Quelle priorisieren: POST-Form > GET
-	$_PL = [];
-	if (!$_PL && $_POST)   $_PL = $_POST;
-	if (!$_PL && $_GET)    $_PL = $_GET;
-	$f = $_PL['f'] ?? null;
+	$_PL = ($_POST && isset($_POST['f'])) ? $_POST : $_GET;
+	$f = isset($_PL['f']) ?? null;
 
 	switch($f) {
 		case 'uploadFormationBilder':
 			$json = $_POST['json'];
-			$sql = "INSERT INTO Formation_Bilder2(pairs, team, bilder) VALUES({$_POST['pairs']}, '{$_POST['team']}', '$json')";
+			$sql = "INSERT INTO Formation_Bilder(pairs, team, bilder) VALUES({$_POST['pairs']}, '{$_POST['team']}', '$json')";
 			//response(false, $sql);
 			query($sql);
 			response(true, $mysqli->insert_id);
