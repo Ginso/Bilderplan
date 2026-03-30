@@ -30,13 +30,13 @@
 	switch($f) {
 		case 'uploadFormationBilder':
 			$json = $_POST['json'];
-			$sql = "INSERT INTO Formation_Bilder2(lastId, pairs, team, bilder) VALUES({$_POST['lastId']}, {$_POST['pairs']}, '{$_POST['team']}', '$json')";
+			$sql = "INSERT INTO Formation_Bilder2(pairs, team, bilder) VALUES({$_POST['pairs']}, '{$_POST['team']}', '$json')";
 			//response(false, $sql);
 			query($sql);
 			response(true, $mysqli->insert_id);
 		case 'formationBilder':
 			$team = isset($_PL['team']) ? $mysqli->escape_string($_PL['team']) : '';
-			$sql = "SELECT * FROM Formation_Bilder2 WHERE team='$team' ORDER BY saved DESC LIMIT 1";
+			$sql = "SELECT * FROM Formation_Bilder WHERE team='$team' ORDER BY saved DESC LIMIT 1";
 			$plan = query($sql)->fetch_array(MYSQLI_ASSOC);
 			$plan['bilder'] = json_decode($plan['bilder'], true);
 			$plan['pairs'] = intval($plan['pairs']);

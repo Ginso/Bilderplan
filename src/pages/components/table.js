@@ -5,7 +5,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import { motion, useCycle } from 'framer-motion';
 import {queryPHP, postPHP, MyInput, MySelect, utils} from '../../utils/utils'
 import {getPersistentStorage, storePlan, storePlanOriginal, setPosition, setPart} from '../../utils/redux'
-import {getSession, setTeam, setTab, setUploading, setShowDialog, setCurrBildIdx, setEditMode, setPointSelection, setAnimated, updatePlan, togglePointSelection, setRotated, setMergeConflicts} from '../../utils/redux'
+import {getSession, setTeam, setTab, setUploading, setShowDialog, setCurrBildIdx, setEditMode, setPointSelection, setAnimated, updatePlan, togglePointSelection, setRotated} from '../../utils/redux'
 import {openDialogView} from './dialog'
 
 export const BildTable = props => {

@@ -49,7 +49,6 @@ const getInitialPlan = () => ({
 	id: -1,
 	pairs: 8,
 	changed: false,
-	lastId: 0,
 	bilder: []
 })
 
@@ -57,14 +56,13 @@ const getInitialPlanOriginal = () => ({
 	id: -1,
 	pairs: 8,
 	saved: null,
-	lastId: 0,
 	loaded: "",
 	bilder: []
 })
 
 const persistentSlice = createSlice({
   name: 'persistent',
-  initialState : {plan: {}, planOriginal: {}, pos: -1, part: 1, mergeConflicts:[]},
+  initialState : {plan: {}, planOriginal: {}, pos: -1, part: 1},
   reducers: {
     storePlan: (state, action) => {
 			const {team, plan} = action.payload
@@ -80,9 +78,6 @@ const persistentSlice = createSlice({
     setPart: (state, action) => {
       state.part = action.payload;
     },
-		setMergeConflicts: (state, action) => {
-			state.mergeConflicts = action.payload
-		}
   }
 });
 
@@ -92,12 +87,11 @@ export const getPersistentStorage = (state) => ({
 	planOriginal: state.persistent.planOriginal[state.session.team] ?? getInitialPlanOriginal(),
 	pos: state.persistent.pos,
 	part: state.persistent.part,
-	mergeConflicts: state.persistent.mergeConflicts
 })
 
 
 // Actions exportieren
-export const { storePlan, storePlanOriginal, setPosition, setPart, setMergeConflicts } = persistentSlice.actions;
+export const { storePlan, storePlanOriginal, setPosition, setPart } = persistentSlice.actions;
 
 
 

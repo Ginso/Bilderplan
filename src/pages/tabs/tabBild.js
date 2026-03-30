@@ -207,27 +207,26 @@ const BildHeader = props => {
 	const currBild = glob.plan.bilder[currBildIdx];
 
 	const handleCopyBild = (before) => {
-		let newId = parseInt(glob.plan.lastId) + 1
-    const newBild = { ...currBild, id: newId };
+		let newId = parseInt(glob.plan.maxId) + 1
+    	const newBild = { ...currBild, id: newId };
 		newBild.title += " - Kopie"
-    const updatedBilder = [...glob.plan.bilder];
+		const updatedBilder = [...glob.plan.bilder];
 
-    if (before) {
-      updatedBilder.splice(currBildIdx, 0, newBild);
-			// currBildIdx bleibt gleich
-    } else {
-      updatedBilder.splice(currBildIdx + 1, 0, newBild);
-      dispatch(setCurrBildIdx(currBildIdx + 1));
-    }
+		if (before) {
+			updatedBilder.splice(currBildIdx, 0, newBild);
+				// currBildIdx bleibt gleich
+		} else {
+			updatedBilder.splice(currBildIdx + 1, 0, newBild);
+			dispatch(setCurrBildIdx(currBildIdx + 1));
+		}
 
-    updatePlan({
-        ...glob.plan,
-        bilder: updatedBilder,
-        lastId: newId,
-        changed: true
-      }
-    );
-  };
+		updatePlan({
+			...glob.plan,
+			bilder: updatedBilder,
+			changed: true,
+			maxId: newId
+		});
+	};
 
 	return (<div id="bildHeader" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px', gap: '5px' }}>
 		<div style={{flex:1}}>

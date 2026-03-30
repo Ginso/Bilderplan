@@ -5,7 +5,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import { motion, useCycle } from 'framer-motion';
 import {queryPHP, postPHP, MyInput, MySelect, utils} from '../../utils/utils'
 import {getPersistentStorage, storePlan, storePlanOriginal, setPosition, setPart} from '../../utils/redux'
-import {getSession, setTeam, setTab, setUploading, setShowDialog, setCurrBildIdx, setEditMode, setPointSelection, setAnimated, togglePointSelection, updatePlan, setRotated, setMergeConflicts} from '../../utils/redux'
+import {getSession, setTeam, setTab, setUploading, setShowDialog, setCurrBildIdx, setEditMode, setPointSelection, setAnimated, togglePointSelection, updatePlan, setRotated} from '../../utils/redux'
 
 export default function Point({ pos, part }) {
 	const dispatch = useDispatch();

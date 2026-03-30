@@ -5,7 +5,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import { motion, useCycle } from 'framer-motion';
 import {queryPHP, postPHP, MyInput, MySelect, utils} from '../../utils/utils'
 import {getPersistentStorage, storePlan, storePlanOriginal, setPosition, setPart} from '../../utils/redux'
-import {getSession, setTeam, setTab, setUploading, setShowDialog, setCurrBildIdx, setEditMode, setPointSelection, setAnimated, updateBild, togglePointSelection, setRotated, setMergeConflicts} from '../../utils/redux'
+import {getSession, setTeam, setTab, setUploading, setShowDialog, setCurrBildIdx, setEditMode, setPointSelection, setAnimated, updateBild, togglePointSelection, setRotated} from '../../utils/redux'
 
 export default function DistDlg(props) {
 	const dispatch = useDispatch();
