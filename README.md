@@ -43,12 +43,12 @@ Man kann mit einer Datenbank mehrere Teams verwalten.
 Um ein neues Team anzulegen einfach den Folgenden SQL ausführen (das A am Anfang steht zb für A-Team, die 8 danach für die Anzahl Paare. bei weniger Paare müssen entsprechend viele Punkte ([0, 0]) entfernt werden)
 
 Beispiel A-team mit 8 Paaren
-INSERT INTO `Formation_Bilder` (`team`, `pairs`, `lastId`, `bilder`) VALUES
-('A', 8, 0, '[{\"id\": 0, \"point\": \"\", \"title\": \"Start\", \"leaders\": [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]}]');
+INSERT INTO `Formation_Bilder` (`team`, `pairs`, `bilder`) VALUES
+('A', 8, 0, '[{\"id\": 0, \"point\": \"\", \"title\": \"Gong\", \"leaders\": [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]}]');
 
 Beispiel B-Team mit 6 Paaren
-INSERT INTO `Formation_Bilder` (`team`, `pairs`, `lastId`, `bilder`) VALUES
-('B', 6, 0, '[{\"id\": 0, \"point\": \"\", \"title\": \"Start\", \"leaders\": [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]}]');
+INSERT INTO `Formation_Bilder` (`team`, `pairs`, `bilder`) VALUES
+('B', 6, 0, '[{\"id\": 0, \"point\": \"\", \"title\": \"Gong\", \"leaders\": [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]}]');
 
 Die Url für das A-Team lautet dann zb https://example-url.de/#/A
 
@@ -57,3 +57,14 @@ Die Url für das A-Team lautet dann zb https://example-url.de/#/A
 Die DB-Tabelle erstellt bei jeder Änderung einen neuen Eintrag der den aktuellen Plan enthält.
 Verwendet wird immer das neueste (nach der Spalte 'saved').
 Umn also eine frühere Version wiederherzustellen oder zb den Plan von einem anderen Team zu kopieren muss der entsprechende Eintrag kopiert werden und mit einem aktuellen Datum versehen werden.
+
+### Bestehenden Bilderplan übernehemen (JSON-Kenntnisse erforderlich)
+Falls man schon einen fertigen Bilderplan hat und die Möglichkeit hat, daraus ein JSON zu erstellen, kann man das natürlich auch direkt eintragen. Dazu muss es wiefolgt aussehen:
+Ein JSON-Array mit einem Objekt pro Bild, welches die folgenden Attribute hat:
+  id: (Zahl) eine eindeutige id innerhalb des Plans, am besten einfach eine fortlaufende nummer
+  point: (Text) kurzer Text, was den Punkt definiert. Zb "Herr rechter Fuß"
+  title: (Text) Überschrift für das Bild, wird auch in der Tabelle angezeigt. Sollte beinhalten welche Stelle der Choreo dieses Bild definiert
+  leaders: (Array) eine Array von Punkten [x,y] welche die Positionen der Paare oder der Leader(bei getrennten Punkten) darstellt sortiert nach Position
+  follower (nur bei getrennten punkten): Punkte der follower analog zu leader
+Beispiel: siehe die beiden INSERT-Befehle oben
+  
