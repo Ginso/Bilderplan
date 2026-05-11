@@ -100,6 +100,7 @@ const PositionSelector = ({showWay, setShowWay}) => {
 	return (
     <div id="positionSelector">
       <div>
+				<label>Position:</label>
         <label>
           <input
             type="radio"
