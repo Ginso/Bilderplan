@@ -138,6 +138,12 @@ export default function TabBild(props) {
 	else if(freeCorners[2]) btnStyle = {right: '0px', bottom:'0px'}
 	else if(freeCorners[3]) btnStyle = {left: '0px', bottom:'0px'}
 
+	let followers = currBild.followers
+	if(!followers && glob.animated && currBildIdx > 0) {
+		followers = glob.plan.bilder[currBildIdx - 1].followers;
+
+	}
+
 
 	return (<div id="tabBild" style={{padding:'0px 20px'}}>
 			<BildHeader/> {/* Zeile mit Title, Navigation zu anderen Bildern, editMode, etc.*/}
@@ -164,7 +170,7 @@ export default function TabBild(props) {
 					</div>}
 					<div id="pointWrapper">
 						{currBild.leaders.map((p, idx) => <Point key={idx} pos={idx} part={2}/>)}
-						{currBild.followers && currBild.followers.map((p, idx) => <Point key={idx} pos={idx} part={1}/>)}
+						{followers && followers.map((p, idx) => <Point key={idx} pos={idx} part={1}/>)}
 					</div>
 					<button style={btnStyle} onClick={() => dispatch(setRotated(!glob.rotated))}>⥁</button>
 				</div>
