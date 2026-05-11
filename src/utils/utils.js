@@ -11,45 +11,185 @@ export const checkUrlForQuery = () => {
 	return false;
 }
 
-export const postPHP = (f, data, callback, errorCB=null) => {
-	if(!checkUrlForQuery()) return;
-	let formData = new FormData();
-	for(let key in data) {
-		formData.append(key, data[key])
-	}
-	let url = urlForQuery + '?f=' + f;
-	fetch(url, {
-		method: "POST",
-		body: formData
-	})
-		.then(response => response.json())
-		.then(json => {
+const demoPlan = {
+  "id": "153",
+  "pairs": 8,
+  "bilder": [
+    {
+      "id": 0,
+      "point": "Jede Person eigener Punkt",
+      "title": "Einmarsch",
+      "comment": "",
+      "leaders": [
+        [-3.5, -7],
+        [-3.5, -6],
+        [2.5, -6],
+        [2.5, -7],
+        [-1.5, -6],
+        [0.5, -7],
+        [0.5, -6],
+        [-1.5, -7]
+      ],
+      "followers": [
+        [1.5, -6],
+        [-2.5, -6],
+        [-2.5, -7],
+        [-0.5, -7],
+        [-0.5, -6],
+        [1.5, -7],
+        [3.5, -6],
+        [3.5, -7]
+      ]
+    },
+    {
+      "id": 1,
+      "point": "Jede Person eigener Punkt",
+      "title": "Einmarsch - Kreis",
+      "comment": "",
+      "leaders": [
+        [-2, -1],
+        [-2, 1],
+        [2, 1],
+        [2, -1],
+        [-1, 2],
+        [1, -2],
+        [1, 2],
+        [-1, -2]
+      ],
+      "followers": [
+        [3, 3],
+        [-4, 0],
+        [-3, 3],
+        [-3, -3],
+        [0, 4],
+        [0, -4],
+        [4, 0],
+        [3, -3]
+      ]
+    },
+    {
+      "id": 2,
+      "point": "Herr RF",
+      "title": "Samba Pose",
+      "comment": "",
+      "leaders": [
+        [-4, -2],
+        [-3, -1],
+        [-2, 0],
+        [-1, -1],
+        [-4, 0],
+        [-1, -3],
+        [-2, -2],
+        [-3, -3]
+      ]
+    },
+    {
+      "id": 3,
+      "point": "Herr LF",
+      "title": "Beginn Jive",
+      "comment": "",
+      "leaders": [
+        [-2, 1],
+        [-1, 2],
+        [0, 3],
+        [1, 2],
+        [-2, 3],
+        [1, 0],
+        [0, 1],
+        [-1, 0]
+      ]
+    },
+    {
+      "id": 4,
+      "point": "Herr RF, Dame LF",
+      "title": "Jive",
+      "comment": "",
+      "leaders": [
+        [0, 1],
+        [1, 2],
+        [2, 3],
+        [4, 3],
+        [0, 3],
+        [4, 1],
+        [3, 2],
+        [2, 1]
+      ],
+      "followers": [
+        [-5, 1],
+        [-5, 2],
+        [-4, 3],
+        [-3, 3],
+        [-5, 3],
+        [-3, 1],
+        [-3, 2],
+        [-4, 1]
+      ]
+    },
+    {
+      "id": 5,
+      "point": "Paarmitte",
+      "title": "Jive - zusammen",
+      "comment": "",
+      "leaders": [
+        [-1, 0],
+        [-1, 2],
+        [0, 3],
+        [1, 4],
+        [-1, 4],
+        [1, 0],
+        [1, 2],
+        [0, 1]
+      ]
+    }
+  ],
+  "saved": "2026-03-30 19:15:52",
+  "lastId": 5,
+  "team": "",
+  "loaded": "09:13:33",
+  "changed": true
+}
 
-			if(json.success) callback(json.data);
-			else {
-				if(errorCB == null) console.log(json.data)
-				else errorCB(json.data);
-			}
-		})
-		.catch(typeof errorCB === 'function' ? errorCB : () => {})
+export const postPHP = (f, data, callback, errorCB=null) => {
+	alert('upload für demo deaktiviert')
+	// if(!checkUrlForQuery()) return;
+	// let formData = new FormData();
+	// for(let key in data) {
+	// 	formData.append(key, data[key])
+	// }
+	// let url = urlForQuery + '?f=' + f;
+	// fetch(url, {
+	// 	method: "POST",
+	// 	body: formData
+	// })
+	// 	.then(response => response.json())
+	// 	.then(json => {
+	//
+	// 		if(json.success) callback(json.data);
+	// 		else {
+	// 			if(errorCB == null) console.log(json.data)
+	// 			else errorCB(json.data);
+	// 		}
+	// 	})
+	// 	.catch(typeof errorCB === 'function' ? errorCB : () => {})
 }
 
 export const queryPHP = (f, d, callback, errorCB=null) => {
-	if(!checkUrlForQuery()) return;
-	let data = {...d}
-	let url = urlForQuery + '?f=' + f;
-	for(let key in data) url += "&" + key + "=" + encodeURIComponent(data[key]);
-	console.log(url)
-	fetch(url)
-		.then(response => response.json())
-		.then(json => {
-
-			if(json.success) callback(json.data);
-			else {
-				alert(json.data);
-			}
-		})
-		.catch(err => alert(err))
+	return demoPlan
+	// if(!checkUrlForQuery()) return;
+	// let data = {...d}
+	// let url = urlForQuery + '?f=' + f;
+	// for(let key in data) url += "&" + key + "=" + encodeURIComponent(data[key]);
+	// console.log(url)
+	// fetch(url)
+	// 	.then(response => response.json())
+	// 	.then(json => {
+	//
+	// 		if(json.success) callback(json.data);
+	// 		else {
+	// 			alert(json.data);
+	// 		}
+	// 	})
+	// 	.catch(err => alert(err))
 }
 
 export const MyInput = props => {
