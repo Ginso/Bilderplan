@@ -174,7 +174,7 @@ export const postPHP = (f, data, callback, errorCB=null) => {
 }
 
 export const queryPHP = (f, d, callback, errorCB=null) => {
-	return demoPlan
+	callback(demoPlan)
 	// if(!checkUrlForQuery()) return;
 	// let data = {...d}
 	// let url = urlForQuery + '?f=' + f;
