@@ -146,7 +146,7 @@ const demoPlan = {
   "lastId": 5,
   "team": "",
   "loaded": "09:13:33",
-  "changed": true
+  "changed": false
 }
 
 export const postPHP = (f, data, callback, errorCB=null) => {
