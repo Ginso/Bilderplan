@@ -234,7 +234,7 @@ const BildHeader = props => {
 		});
 	};
 
-	return (<div id="bildHeader" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px', gap: '5px' }}>
+	return (<div id="bildHeader">
 		<div style={{flex:1}}>
 			{currBildIdx > 0 && (
 				<div className="arrLeft clickable" onClick={() => dispatch(setCurrBildIdx(currBildIdx - 1))}>
@@ -243,7 +243,7 @@ const BildHeader = props => {
 			)}
 		</div>
 
-		{glob.editMode==1 && <button onClick={() => handleCopyBild(true)} style={{ marginRight: '10px' }}>+</button>}
+		{glob.editMode==1 && <button onClick={() => handleCopyBild(true)}>+</button>}
 
 		<div style={{flex:1}}>
 			Bild {currBildIdx + 1} {glob.editMode ?
@@ -254,12 +254,12 @@ const BildHeader = props => {
 					style={{width:"calc(100% - 150px)"}}/>
 				: currBild.title}
 
-			<button onClick={() => dispatch(setEditMode(!glob.editMode))} style={{ marginLeft: '10px' }}>
+			<button onClick={() => dispatch(setEditMode(!glob.editMode))} style={{ margin: '5px' }}>
 				{glob.editMode ? '✕' : '✎'}
 			</button>
 		</div>
 
-		{glob.editMode==1 && <button onClick={() => handleCopyBild(false)} style={{ marginRight: '10px' }}>+</button>}
+		{glob.editMode==1 && <button onClick={() => handleCopyBild(false)}>+</button>}
 
 		<div style={{flex:1}}>
 			{currBildIdx < glob.plan.bilder.length - 1 && (

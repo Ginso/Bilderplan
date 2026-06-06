@@ -358,15 +358,35 @@ html, body, #root, .App, #bilderplan {
 	tr{cursor: pointer;}
 }
 
+
+
 #tabBild {
 	#bildHeader {
 		border-bottom:1px solid black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    gap: 5px;
+    @media(min-width: 1000px) {
+      gap: 10px;
+
+    }
+    input {
+      @media(max-width: 999px) {
+        width: calc(100% - 10px) !important;
+      }
+    }
 		.arrLeft, .arrRight {
 			display: inline-block;
 			background-color: blue;
 			color: white;
-			min-width: 80%;
+			width: calc(100% - 30px);
+      line-break: anywhere;
 		}
+    & > div {
+      min-width: 0;
+    }
 		.arrLeft {
 			padding: 5px 10px 5px 20px;
 			clip-path: polygon(0% 50%, 20px 0%, 100% 0%, 100% 100%, 20px 100%);
