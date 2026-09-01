@@ -83,9 +83,9 @@ export default function Bilderplan(props) {
 
 	return (<div id="bilderplan" className={glob.unit < 7 ? 'mobile' : ''}>
 		<header style={{ padding: '10px', background: '#f0f0f0', borderBottom: '1px solid #ccc' }}>
-			<h1 style={{ margin: 0 }}>
-				{glob.team === '' ? 'Testumgebung' : `Bilderplan ${glob.team.toUpperCase()}-Team`}
-			</h1>
+			{glob.team == '' ? null : (<h1 style={{ margin: 0 }}>
+				{glob.team === 'test' ? 'Testumgebung' : `Bilderplan ${glob.team.toUpperCase()}-Team`}
+			</h1>)}
 			{getHeaderLine(glob.plan, glob.planOriginal)}
 			<div>
 				<button disabled={!glob.plan.changed || glob.uploading} style={{width:'75px'}} onClick={upload}>{glob.uploading ? '...' : 'upload'}</button>
