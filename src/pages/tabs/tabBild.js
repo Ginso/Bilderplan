@@ -25,7 +25,7 @@ export default function TabBild(props) {
 	const yVals = Array.from(new Set(currBild.leaders.map(p => p[1])))
 
 	let originalBild = glob.planOriginal.bilder[currBildIdx]
-	if(originalBild.id != currBild.id)
+	if(originalBild == undefined || originalBild.id != currBild.id)
 		originalBild = glob.planOriginal.bilder.find(b => b.id==currBild.id)
 	const changed = originalBild && !utils.compareRec(currBild, originalBild)
 

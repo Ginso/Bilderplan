@@ -28,6 +28,12 @@ export default function Bilderplan(props) {
 
 	useEffect(() => {
 		queryPHP("formationBilder", {team:glob.team}, data => {
+			if(data == null) {
+				if(glob.plan.bilder.length == 0) {
+					dispatch(setTab(2))
+				}
+				return
+			}
 			if(glob.plan.id == data.id) return
 			let loaded = new Date().toLocaleTimeString()
 			let plan = {...data, loaded}
@@ -92,13 +98,13 @@ export default function Bilderplan(props) {
 				getTab(glob.tab)
 			}
 		</div>
-		<div id="navigation">
-			{
-				['▤','▦','ⓘ'].map((icon,i) => (
-					<div key={i} className={glob.tab==i ? 'selected' : ''} onClick={() => {console.log("setTab", i); dispatch(setTab(i))}}>{icon}</div>
-				))
-			}
-		</div>
+		{ glob.plan.bilder.length == 0 ? null : (
+			<div id="navigation">
+				{['▤','▦','ⓘ  ⚙'].map((icon,i) => (
+					<div key={i} className={glob.tab==i ? 'selected' : ''} onClick={() => {dispatch(setTab(i))}}>{icon}</div>
+				))}
+			</div>
+		)}
 		<DialogManager />
 	</div>)
 }

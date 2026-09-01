@@ -11,7 +11,7 @@ CREATE TABLE `Formation_Bilder` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `Formation_Bilder` (`pairs`, `lastId`, `team`, `bilder`) VALUES
-(8, 0, '', '[{\"id\": 0, \"point\": \"\", \"title\": \"Start\", \"leaders\": [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]}]');
+INSERT INTO `Formation_Bilder` (`pairs`, `team`, `bilder`) VALUES
+(8, '', '[{\"id\": 0, \"point\": \"\", \"title\": \"Start\", \"leaders\": [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]}]');
 
 COMMIT;

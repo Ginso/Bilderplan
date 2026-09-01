@@ -3,14 +3,162 @@ import * as ReactDOM from 'react-dom/client';
 import {Link, useParams, useNavigate} from "react-router-dom";
 import {useSelector, useDispatch} from 'react-redux'
 import {queryPHP, postPHP, MyInput, MySelect, utils} from '../../utils/utils'
-import {getPersistentStorage, storePlan, storePlanOriginal, setPosition, setPart} from '../../utils/redux'
+import {getPersistentStorage, storePlan, storePlanOriginal, setPosition, setPart, updatePlan} from '../../utils/redux'
 import {getSession, setTeam, setTab, setUploading, setShowDialog, setCurrBildIdx, setEditMode, setUnit, setSelectedPoints, setAnimated} from '../../utils/redux'
 
+function isValid(json) {
+        try {
+                let bilder = JSON.parse(json);
+                if(!Array.isArray(bilder)) return "Haupt-Element ist kein Array"
+                if(bilder.length == 0) return "Haupt-Element ist leer"
+                if(!Array.isArray(bilder[0].leaders)) return "Erstes Bild enthält keine Punkte-Array für leaders"
+                let pairs = bilder[0].leaders.length
+                for(let key in bilder) {
+                        let i = parseInt(key)
+                        let bild = bilder[i]
+                        if(typeof(bild.point) != 'string') return `Bild ${i+1} enthält keinen String-Eintrag für point`
+                        if(typeof(bild.title) != 'string') return `Bild ${i+1} enthält keinen String-Eintrag für title`
+                        if(bild.comment !== undefined && typeof(bild.comment) != 'string') return `Bild ${i+1} enthält einen comment der kein String ist`
+                        if(!Array.isArray(bild.leaders)) return `Bild ${i+1} enthält keine Punkte-Array für leaders`
+                        if(bild.leaders.length != pairs) return `Leaders-Array von Bild ${i+1} hat nicht die gleiche Länge wie in Bild 1`
+                        for(let j=0; j<pairs;j++) {
+                                let p = bild.leaders[j]
+                                if(!Array.isArray(p) || p.length != 2 || typeof(p[0]) != 'number' || typeof(p[1]) != 'number') 
+                                        return `In Bild ${i+1} ist der ${j+1}. Eintrag der leaders kein Array aus 2 Zahlen`
+                        }
+                        if(bild.followers) {
+                                if(!Array.isArray(bild.followers)) return `Bild ${i+1} enthält einen eintrag für followers, der kein Punkt ist`
+                                if(bild.followers.length != pairs) return `followers-Array von Bild ${i+1} hat nicht die gleiche Länge wie leaders in Bild 1`
+                                for(let j=0; j<pairs;j++) {
+                                        let p = bild.followers[j]
+                                        if(!Array.isArray(p) || p.length != 2 || typeof(p[0]) != 'number' || typeof(p[1]) != 'number')
+                                                return `In Bild ${i+1} ist der ${j+1}. Eintrag der followers kein Array aus 2 Zahlen`
+                                }
+
+                        }
+                }
+                return ''
+        } catch (error) {
+                // JSON ist ungültig
+                return 'ungültiges JSON';
+        }
+}
 
 export default function TabInfo(props) {
 	const dispatch = useDispatch();
 	const glob = {...useSelector(getPersistentStorage), ...useSelector(getSession)};
+        const [pairs, setPairs] = useState(glob.plan.pairs)
+        const [newPairs, setNewPairs] = useState(1)
+        const [json, setJSON] = useState(JSON.stringify([
+                {
+                        id: 0, 
+                        point: "", 
+                        title: "Start", 
+                        leaders: [[0,0],[1,0],[2,0],[3,0],[4,0]]
+                },{
+                        id: 1, 
+                        point: "", 
+                        title: "Ende", 
+                        leaders: [[0,0],[1,0],[2,0],[3,0],[4,0]],
+                        followers: [[0,1],[1,1],[2,1],[3,1],[4,1]],
+                }
+        ]))
+
+        const createNewPlan = () => {
+                let bild = {
+                        id: 0, 
+                        point: "", 
+                        title: "Start", 
+                        leaders: Array.from(Array(parseInt(pairs)).keys()).map(i => [i,0])
+                }
+                let plan = {
+                        id: -1,
+                        changed: true,
+                        bilder: [bild],
+                        pairs
+                }
+                updatePlan(plan)
+        }
+        const addPairs = () => {
+                let plan = structuredClone(glob.plan)
+                plan.pairs = glob.plan.pairs + newPairs
+                plan.bilder.forEach(bild => {
+                        for(let i = 0; i < newPairs; i++) {
+                                bild.leaders.push([-8,-8])
+                                if(bild.followers) bild.followers.push([-8,-8])
+                        }
+                })
+                updatePlan(plan)
+        }
+        const deletePair = pos => {
+                let plan = structuredClone(glob.plan)
+                plan.pairs--
+                plan.bilder.forEach(bild => {
+                        for(let i = 0; i < newPairs; i++) {
+                                bild.leaders.splice(pos,1)
+                                if(bild.followers) bild.followers.splice(pos,1)
+                        }
+                })
+                updatePlan(plan)
+        }
+        const importJSON = () => {
+                let bilder = JSON.parse(json)
+                let plan = {
+                        id: -1,
+                        changed: true,
+                        pair:bilder[0].leaders.length,
+                        bilder
+                }
+                updatePlan(plan)
+        }
+        let jsonResult = isValid(json)
+
+        
         return (<div style={{textAlign:'left', display:'inline-block'}}>
+                        <h1>Einstellungen</h1>
+                        Alle nachfolgenden Änderungsmöglichkeiten werden nicht automatisch hochgeladen
+                        <h2>Leeren Bilderplan erstellen</h2>
+                        {glob.plan.bilder.length == 0 ? null : 'Überschreibe den aktuellen Bilderplan mit einem leeren Plan.'}
+                        <span style={{display:'flex', gap:'10px'}}>
+                                Paare:
+                                <MySelect value={pairs} set={setPairs}>
+                                        {
+                                                [5,6,7,8].map(i => <option key={i} value={i}>{i}</option>)
+                                        }
+                                </MySelect>
+                                <button onClick={createNewPlan}>erstellen</button>
+                        </span>
+                        {glob.plan.pairs < 8 && (<>
+                                <h2>Paare hinzufügen</h2>
+                                <MySelect value={newPairs} set={setNewPairs}>
+                                {
+                                        [1,2,3,4,5,6,7].slice(0,8-glob.plan.pairs).map(i => <option key={i} value={i}>{i}</option>)
+                                }
+                                </MySelect>
+                                Paar(e)
+                                <button onClick={addPairs}>hinzufügen</button>
+                        </>)}
+                        <h2>Paare löschen</h2>
+                        Achtung: beim löschen eines Paares verschieben sich die höheren Paarnummern<br/>
+                        {
+                                [1,2,3,4,5,6,7,8].slice(0,glob.plan.pairs).map(i => (
+                                        <button style={{margin:'5px'}} key={i} onClick={() => deletePair(i-1)}>Paar {i} löschen</button>
+                                ))
+                        }
+                        <h2>JSON importieren</h2>
+                        Um einen Bilderplan zu importieren braucht ihn als JSON.<br/>
+                        Wer sich damit nicht auskennt, kann versuchen den Plan irgendwie einer KI wie ChatGPT mit nachfolgender Beschreibung(und am besten dem Beispiel) zu geben.<br/>
+                        Benötigt wird ein JSON-Array, mit einem Eintrag pro Bild. Jedes Bild benötigt die folgenden Attribute:<br/>
+                        title(String): Überschrift des Bildes<br/>
+                        point(String): Beschreibung was den Punkt definiert<br/>
+                        leaders(Array): Punkte der Leader, jeder Punkt als array [x,y]<br/>
+                        bei Bildern mit unterschiedlichen Punkten für leader und follower werden wird noch der eintrag followers(analog zu leaders) benötigt
+                        falls es zu dem Bild noch einen Kommentar wird kann dieser mit 'comment' angegeben werden<br/>
+                        <textarea style={{width:"100%", height:'100px'}} value={json} onChange={e => setJSON(e.target.value)}/>
+                        {
+                                jsonResult.length == 0 ? <button onClick={importJSON}>import</button> : jsonResult
+                        }
+
                         <h1>Über diese Seite</h1>
                         <h2>▤ Die Übersichtstabelle</h2>
                         In der Tabelle auf der ersten Seite sieht man eine Übersicht über alle Bilder.<br/>

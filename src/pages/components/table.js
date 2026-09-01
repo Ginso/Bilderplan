@@ -92,18 +92,27 @@ export const EditTable = props => {
   };
 
 	const currIdx = glob.currBildIdx;
-  const bilder = glob.plan.bilder;
-  const currBild = bilder[currIdx];
+	const bilder = glob.plan.bilder;
+
+	const [currBild, setCurrBild] = useState(bilder[currIdx]);
 	const prevBild = bilder[currIdx > 0 ? currIdx - 1 : currIdx].leaders;
 	const hasFollowers = currBild.followers !== undefined
 
 	const set = (part, pos, axis, val) => {
-		let plan = structuredClone(glob.plan)
+		let v = parseFloat(val)
+		if(isNaN(v)) v = val
+		let bild = structuredClone(currBild)
 		if(part == 1) {
-			plan.bilder[currIdx].followers[pos][axis] = parseFloat(val)
+			bild.followers[pos][axis] = v
 		} else {
-			plan.bilder[currIdx].leaders[pos][axis] = parseFloat(val)
+			bild.leaders[pos][axis] = v
 		}
+		setCurrBild(bild)
+		let invalid = bild.leaders.find(p => typeof(p[0]) == 'string' || typeof(p[1]) == 'string') 
+			|| (bild.followers && bild.followers.find(p => typeof(p[0]) == 'string' || typeof(p[1]) == 'string'))
+		if(invalid) return
+		let plan = structuredClone(glob.plan)
+		plan.bilder[currIdx] = bild
 		updatePlan(plan)
 	}
 
@@ -133,8 +142,8 @@ export const EditTable = props => {
 				</tr>
 				{currBild.leaders.map((p,j) => {
 					let p2 = prevBild[j]
-					let dx = p[0]-p2[0]
-					let dy = p[1]-p2[1]
+					let dx = typeof(p[0]) == 'string' ? 0 : p[0]-p2[0]
+					let dy = typeof(p[1]) == 'string' ? 0 : p[1]-p2[1]
 					return (<tr key={j}>
 						<td>{j+1}</td>
 						<td><input onChange={e => set(2, j, 0, e.target.value)} value={p[0]}/></td>
