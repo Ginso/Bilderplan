@@ -32,6 +32,7 @@ Dabei muss unbedingt die config.js angepasst werden und der link zu der Schnitts
 
 2. (für Entwickler) das repository branchen und selbst bauen. Dann kann man auch eigene Änderungen vornehmen.
 Auch hier muss die config.js wie oben angepasst werden, allerdings die im Ordner public.
+Alternativ kann man die URL auch als Umgebungsvariable setzen: REACT_APP_URL_FOR_QUERY=https://example-url.de/sql.php
 Aktuell ist der Code noch nicht wirklich dokumentiert und wahrscheinlich etwas unübersichtlich.
 Wahrscheinlich werde ich das noch nachtragen
 

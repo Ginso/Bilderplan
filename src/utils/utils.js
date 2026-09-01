@@ -1,4 +1,10 @@
+const envUrlForQuery =
+	(typeof process !== 'undefined' && process.env && process.env.REACT_APP_URL_FOR_QUERY)
+		? process.env.REACT_APP_URL_FOR_QUERY
+		: '';
+
 const urlForQuery =
+	envUrlForQuery ||
 	(typeof window !== 'undefined' &&
 		window.__BILDERPLAN_CONFIG__ &&
 		window.__BILDERPLAN_CONFIG__.urlForQuery)
