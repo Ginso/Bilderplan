@@ -94,7 +94,7 @@ export default function Bilderplan(props) {
 				<button disabled={!glob.plan.changed} onClick={discard}>Änderungen verwerfen</button>
 			</div>
 		</header>
-		<div id="tab" style={{paddingBottom:'100px', overflowY:'scroll', height:'100vh'}}>
+		<div id="tab" style={{padding:'0px 10px 100px 10px', overflowY:'scroll', height:'100vh'}}>
 			{
 				getTab(glob.tab)
 			}
