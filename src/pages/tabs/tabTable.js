@@ -149,10 +149,9 @@ export default function TabTable(props) {
             <tr key={bild.id}
 							onClick={()=>{dispatch(setCurrBildIdx(idx)); dispatch(setTab(1))}}
 							style={{backgroundColor:idx%2==0 ? '#aaa' : '#ddd', 
-                border: glob.selected == idx && '3px solid cyan',
-                fontWeight: bild.isNew ? 'bold' : 'normal',
+                border: glob.selected == idx && '3px solid cyan'
               }}>
-              <td>{idx+1}: {bild.title}</td>
+              <td style={{fontWeight: bild.isNew ? 'bold' : 'normal'}}>{idx+1}: {bild.title}</td>
               <td>{glob.pos == -1 ? bild.dx : x}</td>
               <td>{glob.pos == -1 ? bild.dy : y}</td>
               {glob.pos > -1 && showWay == 1 && (
