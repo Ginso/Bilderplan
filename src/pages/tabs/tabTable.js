@@ -14,7 +14,96 @@ export default function TabTable(props) {
 
 	const pos = glob.pos;
   const part = glob.part;
-  const bilder = glob.plan.bilder ?? [];
+  let bilder = glob.plan.bilder ?? []
+  bilder = bilder.map((bild, idx) => {
+    let bildCopy = { ...bild };
+    if(idx == 0) {
+      bildCopy.isNew = true;
+    } else {
+      bildCopy.isNew = false;
+      const prevBild = bilder[idx - 1];
+      if(glob.pos == -1 || part !== 1) {
+        let dist = [bild.leaders[0][0] - prevBild.leaders[0][0], bild.leaders[0][1] - prevBild.leaders[0][1]]
+        let diffLeader = false
+        for(let i in bild.leaders) {
+          if(bild.leaders[i][0] - prevBild.leaders[i][0] != dist[0] || bild.leaders[i][1] - prevBild.leaders[i][1] != dist[1]) {
+            diffLeader = true;
+            break;
+          }
+        }
+        if(diffLeader) bildCopy.isNew = true;
+      }
+
+      if(!bildCopy.isNew && (glob.pos == -1 || part !== 2)) {
+        let diffFollower = false
+        if(bild.followers || prevBild.followers) {
+          let followers = bild.followers ?? bild.leaders
+          let prevFollowers = prevBild.followers ?? prevBild.leaders
+          let dist = [followers[0][0] - prevFollowers[0][0], followers[0][1] - prevFollowers[0][1]]
+          for(let i in followers) {
+            if(followers[i][0] - prevFollowers[i][0] != dist[0] || followers[i][1] - prevFollowers[i][1] != dist[1]) {
+              diffFollower = true;
+              break;
+            }
+          }
+        }
+        if(diffFollower) bildCopy.isNew = true;
+      }
+    }
+    if(glob.pos == -1) {
+      let xVals = Array.from(new Set(bild.leaders.map(p => p[0]))).toSorted((x,y) => x-y)
+      let yVals = Array.from(new Set(bild.leaders.map(p => p[1]))).toSorted((x,y) => x-y)
+      let dx = '-'
+      if(xVals.length > 1) {
+        dx = xVals[1]-xVals[0]
+        for(let i = 1; i < xVals.length-1; i++) {
+          if(xVals[i+1]-xVals[i] != dx) {
+            dx = '-'
+            break
+          }
+        }
+      }
+      let dy = '-'
+      if(yVals.length > 1) {
+        dy = yVals[1]-yVals[0]
+        for(let i = 1; i < yVals.length-1; i++) {
+          if(yVals[i+1]-yVals[i] != dy) {
+            dy = '-'
+            break
+          }
+        }
+      }
+      if(bild.followers) {
+        let xVals = Array.from(new Set(bild.followers.map(p => p[0]))).toSorted((x,y) => x-y)
+        let yVals = Array.from(new Set(bild.followers.map(p => p[1]))).toSorted((x,y) => x-y)
+        let dx2 = '-'
+        if(xVals.length > 1) {
+          dx2 = xVals[1]-xVals[0]
+          for(let i = 1; i < xVals.length-1; i++) {
+            if(xVals[i+1]-xVals[i] != dx2) {
+              dx2 = '-'
+              break
+            }
+          }
+        }
+        if(dx != dx2) dx = `${dx} / ${dx2}`
+        let dy2 = '-'
+        if(yVals.length > 1) {
+          dy2 = yVals[1]-yVals[0]
+          for(let i = 1; i < yVals.length-1; i++) {
+            if(yVals[i+1]-yVals[i] != dy2) {
+              dy2 = '-'
+              break
+            }
+          }
+        }
+        if(dy != dy2) dy = `${dy} / ${dy2}`      
+      }
+      bildCopy.dx = dx
+      bildCopy.dy = dy
+    }
+    return bildCopy;
+  });
 
   const getCoordinates = (bild) => {
     if (glob.pos === -1) return { x: '', y: '' };
@@ -29,8 +118,8 @@ export default function TabTable(props) {
 		<table className="bilder-table" style={{ borderCollapse: 'collapse', textAlign:'left'}}>
 			<colgroup>
 				<col style={{border: '1px solid black'}}></col>
-				{glob.pos >= 0 && <col></col> }
-				{glob.pos >= 0 && <col style={{borderRight: '1px solid black'}}></col> }
+				<col></col>
+				<col style={{borderRight: '1px solid black'}}></col>
 				{showWay==1 && glob.pos >= 0 && <col></col> }
 				{showWay==1 && glob.pos >= 0 && <col></col> }
 				{showWay==1 && glob.pos >= 0 && <col style={{borderRight: '1px solid black'}}></col> }
@@ -38,18 +127,18 @@ export default function TabTable(props) {
 			</colgroup>
 			<tbody>
 				<tr style={{position:'sticky', top:'0', zIndex:'2', height:'25px', backgroundColor:'white', borderTop:'1px solid black'}}>
-					<th rowSpan={glob.pos < 0 ? 1 : 2}>Bild</th>
-					{glob.pos >= 0 && <th colSpan="2">Position</th>}
+					<th rowSpan={2}>Bild</th>
+					<th colSpan="2">Position</th>
 					{showWay==1 && glob.pos >= 0 && <th colSpan="3">Strecke</th>}
-					<th rowSpan={glob.pos < 0 ? 1 : 2}>Punkt ist</th>
+					<th rowSpan={2}>Punkt ist</th>
 				</tr>
-				{glob.pos >= 0 && <tr style={{position:'sticky', top:'25px', zIndex:'2', height:'25px', backgroundColor:'white', borderBottom:'1px solid black'}}>
-					<th>X</th>
-					<th>Y</th>
-					{showWay==1 && <th>X</th>}
-					{showWay==1 && <th>Y</th>}
-					{showWay==1 && <th>m</th>}
-				</tr>}
+				<tr style={{position:'sticky', top:'25px', zIndex:'2', height:'25px', backgroundColor:'white', borderBottom:'1px solid black'}}>
+					<th>{glob.pos == -1 ? 'dX' : 'X'}</th>
+					<th>{glob.pos == -1 ? 'dY' : 'Y'}</th>
+					{glob.pos >= 0 && showWay==1 && <th>X</th>}
+					{glob.pos >= 0 && showWay==1 && <th>Y</th>}
+					{glob.pos >= 0 && showWay==1 && <th>m</th>}
+				</tr>
         {bilder.map((bild,idx) => {
           const { x, y } = getCoordinates(bild);
 					const p = getCoordinates(bilder[Math.max(0,idx-1)])
@@ -59,14 +148,13 @@ export default function TabTable(props) {
           return (
             <tr key={bild.id}
 							onClick={()=>{dispatch(setCurrBildIdx(idx)); dispatch(setTab(1))}}
-							style={{backgroundColor:idx%2==0 ? '#aaa' : '#ddd', border: glob.selected == idx && '3px solid cyan'}}>
+							style={{backgroundColor:idx%2==0 ? '#aaa' : '#ddd', 
+                border: glob.selected == idx && '3px solid cyan',
+                fontWeight: bild.isNew ? 'bold' : 'normal',
+              }}>
               <td>{idx+1}: {bild.title}</td>
-              {glob.pos > -1 && (
-                <>
-                  <td>{x}</td>
-                  <td>{y}</td>
-                </>
-              )}
+              <td>{glob.pos == -1 ? bild.dx : x}</td>
+              <td>{glob.pos == -1 ? bild.dy : y}</td>
               {glob.pos > -1 && showWay == 1 && (
                 <>
                   <td>{dx}</td>
